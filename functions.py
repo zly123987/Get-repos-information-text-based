@@ -3,6 +3,7 @@ import re
 
 retry_times = 30
 limit = retry_times
+token =
 #write file
 def write_file(f,user_repos,index,star,forks,watch,license,contributors,commits,commit_total,LastDate):
 	try:
@@ -25,7 +26,7 @@ def write_file(f,user_repos,index,star,forks,watch,license,contributors,commits,
 
 def search(user_repos,index,f,failure_list):
 	index = str(index)
-	result = requests.get('https://api.github.com/repos'+user_repos+'?access_token=96fe95adb297f24c8217d671611b4a407e77cae4')
+	result = requests.get('https://api.github.com/repos'+user_repos+'?access_token='+token)
 	s = result.text
 	s = str(s)
 
@@ -127,7 +128,7 @@ def search(user_repos,index,f,failure_list):
 				temp = ''
 				limit = retry_times
 				while len(temp)==0:
-					result = requests.get('https://api.github.com/repos'+user_repos+'/stats/contributors?access_token=96fe95adb297f24c8217d671611b4a407e77cae4&per_page=200')
+					result = requests.get('https://api.github.com/repos'+user_repos+'/stats/contributors?access_token='+token+'&per_page=200')
 					s = result.text
 					s = str(s)
 					temp = re.findall(r'"login":.*?"',s)
@@ -179,7 +180,7 @@ def search(user_repos,index,f,failure_list):
 		commit_week = ''
 		limit = retry_times
 		while len(commit_week)==0:
-			result = requests.get('https://api.github.com/repos'+user_repos+'/stats/commit_activity?access_token=96fe95adb297f24c8217d671611b4a407e77cae4')
+			result = requests.get('https://api.github.com/repos'+user_repos+'/stats/commit_activity?access_token='+token)
 			s = result.text
 			s = str(s)
 			#print (s)
@@ -210,7 +211,7 @@ def search(user_repos,index,f,failure_list):
 		
 		
 	#search latest commit
-	result = requests.get('https://api.github.com/repos'+user_repos+'/commits/master?access_token=96fe95adb297f24c8217d671611b4a407e77cae4')
+	result = requests.get('https://api.github.com/repos'+user_repos+'/commits/master?access_token=token')
 	s = result.text
 	s = str(s)
 	#print (s)
@@ -225,7 +226,7 @@ def search(user_repos,index,f,failure_list):
 			date = CommitDate[0:4]+CommitDate[5:7]+CommitDate[8:]
 			LastDate = int(date)
 		else:
-			result = requests.get('https://api.github.com/repos'+user_repos+'/branches?access_token=96fe95adb297f24c8217d671611b4a407e77cae4&per_page=60')
+			result = requests.get('https://api.github.com/repos'+user_repos+'/branches?access_token=token&per_page=60')
 			s = result.text
 			s = str(s)
 			#print (s)
@@ -239,7 +240,7 @@ def search(user_repos,index,f,failure_list):
 			LastDate = 0
 			print ('Number of branches considered',len(Branch_list))
 			for i in range(0,len(Branch_list)):
-				result = requests.get('https://api.github.com/repos'+user_repos+'/commits/'+Branch_list[i]+'?access_token=96fe95adb297f24c8217d671611b4a407e77cae4')
+				result = requests.get('https://api.github.com/repos'+user_repos+'/commits/'+Branch_list[i]+'?access_token='+token)
 				s = result.text
 				s = str(s)
 				#print (s)
